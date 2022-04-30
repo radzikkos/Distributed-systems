@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//I'd put N as number of processes to concurrent it
 #define N 4
+
 
 
 void showMatrixes(int A[N][N], int B[N][N], int C[N][N]) {
@@ -116,6 +118,7 @@ int main() {
 
     initialize(A, B, C);
     showMatrixes(A, B, C);
+    // ---------------FROM THIS-----------------
     for(int i = 0; i < N; i++) {
         // I see posibilities to concurrent this piece of code
         // On this time we can pass matrixes A,B and appropriate offset, 
@@ -129,6 +132,7 @@ int main() {
         }
         concatenateMatrixes(A, B, C);
     }
+    // --------------TO THIS--------------------
     showMatrixes(A, B, C);
 }
 
