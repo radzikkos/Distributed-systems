@@ -40,13 +40,15 @@ int **alloc_2d_int(int rows, int cols) {
     return array;
 }
 
-void freeMatrixes(int**A, int**B, int**C ){ 
+void freeMatrixes(int**A, int**B, int**C, int** result ){ 
     free(A[0]);
     free(A);
     free(B[0]);
     free(B);
     free(C[0]);
     free(C);
+    free(result[0]);
+    free(result);
 }
 
 void initialize(int** A, int** B, int** C) {
@@ -241,6 +243,6 @@ int main(int argc, char **argv) {
   }
 
   MPI_Finalize();
-
+    freeMatrixes(A,B,C,result);
 }
 
