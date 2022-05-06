@@ -6,22 +6,22 @@
 
 
 
-void showMatrixes(int A[N][N], int B[N][N], int C[N][N]) {
-    printf("MATRIX A\n");
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < N; j++) {
-            printf("%d ", A[i][j]);
-        }
-        printf("\n");
-    }
+void showMatrixes(int** A, int** B, int** C) {
+    // printf("MATRIX A\n");
+    // for(int i = 0; i < N; i++) {
+    //     for(int j = 0; j < N; j++) {
+    //         printf("%d ", A[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
-    printf("MATRIX B\n");
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < N; j++) {
-            printf("%d ", B[i][j]);
-        }
-        printf("\n");
-    }
+    // printf("MATRIX B\n");
+    // for(int i = 0; i < N; i++) {
+    //     for(int j = 0; j < N; j++) {
+    //         printf("%d ", B[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     printf("MATRIX C\n");
     for(int i = 0; i < N; i++) {
@@ -31,7 +31,26 @@ void showMatrixes(int A[N][N], int B[N][N], int C[N][N]) {
         printf("\n");
     }
 }
-void initialize(int A[N][N], int B[N][N], int C[N][N]) {
+
+int **alloc_2d_int(int rows, int cols) {
+    int *data = (int *)malloc(rows*cols*sizeof(int));
+    int **array= (int **)malloc(rows*sizeof(int*));
+    for (int i=0; i<rows; i++)
+        array[i] = &(data[cols*i]);
+
+    return array;
+}
+
+void freeMatrixes(int**A, int**B, int**C ){ 
+    free(A[0]);
+    free(A);
+    free(B[0]);
+    free(B);
+    free(C[0]);
+    free(C);
+}
+
+void initialize(int** A, int** B, int** C) {
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
             A[i][j] = 1;
@@ -41,20 +60,22 @@ void initialize(int A[N][N], int B[N][N], int C[N][N]) {
     }
 }
 
-void getPreviousValuesRow(int matrix[N], int previousValues[N]) {
+
+
+void getPreviousValuesRow(int* matrix, int* previousValues) {
 
     for(int i = 0; i < N; i++) {
         previousValues[i] = matrix[i];
     }
 }
 
-void getPreviousValuesColumn(int matrix[N][N], int previousValues[N], int column) {
+void getPreviousValuesColumn(int** matrix, int* previousValues, int column) {
     for(int i = 0; i < N; i++) {
         previousValues[i] = matrix[i][column];
     }
 }
 
-void shiftMatrix(int matrix[N][N], int direction) {
+void shiftMatrix(int** matrix, int direction) {
     //left
     int previousValues[N] = {0};
     if(direction == 0) {
@@ -81,7 +102,7 @@ void shiftMatrix(int matrix[N][N], int direction) {
     }
 }
 
-void firstShiftMatrix(int matrix[N][N], int direction) {
+void firstShiftMatrix(int** matrix, int direction) {
     // left
     int previousValues[N] = {0};
     if(direction == 0) {
@@ -104,7 +125,7 @@ void firstShiftMatrix(int matrix[N][N], int direction) {
 
 }
 
-void concatenateMatrixes(int A[N][N], int B[N][N], int C[N][N]) {
+void concatenateMatrixes(int** A, int** B, int** C) {
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
             C[i][j] += A[i][j] * B[i][j];
@@ -112,13 +133,22 @@ void concatenateMatrixes(int A[N][N], int B[N][N], int C[N][N]) {
     }
 }
 int main() {
-    int A[N][N];
-    int B[N][N];
-    int C[N][N];
-
-    initialize(A, B, C);
-    showMatrixes(A, B, C);
-    // ---------------FROM THIS-----------------
+    int** A;
+    int** B;
+    int** C;
+    A = alloc_2d_int(N,N);
+    B = alloc_2d_int(N,N);
+    C = alloc_2d_int(N,N);
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            A[i][j] = 1;
+            B[i][j] = i+j;
+            C[i][j] = 0;
+        }
+    }
+    // initialize(A, B, C);
+    // showMatrixes(A, B, C);
+    // // ---------------FROM THIS-----------------
     for(int i = 0; i < N; i++) {
         // I see posibilities to concurrent this piece of code
         // On this time we can pass matrixes A,B and appropriate offset, 
@@ -130,9 +160,32 @@ int main() {
             shiftMatrix(A,0);
             shiftMatrix(B,1);
         }
+    //     printf("CREATED C MATRIX\n");
+    // for (int i = 0; i<N; i++) {
+    //   for (int j = 0; j<N; j++)
+    //     printf("%d\t", A[i][j] * B[i][j]);
+    //   printf ("\n");
+    // }
+    // printf("\n");
+    printf("Matrix A in %d\n", i);
+    for (int i = 0; i<N; i++) {
+      for (int j = 0; j<N; j++)
+        printf("%d\t", A[i][j]);
+      printf ("\n");
+    }
+
+    printf("Matrix B in %d\n", i);
+    for (int i = 0; i<N; i++) {
+      for (int j = 0; j<N; j++)
+        printf("%d\t", B[i][j]);
+      printf ("\n");
+    }
+    printf("\n");
         concatenateMatrixes(A, B, C);
     }
     // --------------TO THIS--------------------
     showMatrixes(A, B, C);
+
+    freeMatrixes(A,B,C);
 }
 
