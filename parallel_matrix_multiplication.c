@@ -167,7 +167,7 @@ void shiftMatrix(int **matrix, int direction)
     int previousValues[N] = {0};
     if (direction == 0)
     {
-        for (int row = 1; row < N; row++)
+        for (int row = 0; row < N; row++)
         {
             getPreviousValuesRow(matrix[row], previousValues);
             for (int i = 0; i < N; i++)
